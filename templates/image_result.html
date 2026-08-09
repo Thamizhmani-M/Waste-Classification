@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSort Solutions | Analysis Results</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖼️</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f3f4f6; /* Light gray background */
+            color: #111827; /* Dark text */
+            padding-bottom: 5rem;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        h1, h2, h3, h4, h5, .brand-text { font-family: 'Montserrat', sans-serif; }
+        
+        /* Abstract Background Elements for Glass effect */
+        .bg-shape-1 {
+            position: fixed; top: -10%; left: -5%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(200,200,200,0.5) 0%, transparent 70%);
+            filter: blur(60px); pointer-events: none; z-index: -1;
+        }
+        .bg-shape-2 {
+            position: fixed; bottom: -10%; right: -5%; width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, transparent 70%);
+            filter: blur(80px); pointer-events: none; z-index: -1;
+        }
+
+        /* Standard Glassmorphism CSS */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+        }
+
+        /* Clean Bounding Boxes */
+        .bbox {
+            position: absolute; border: 2px solid;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .bbox:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            z-index: 10;
+            transform: scale(1.02);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+        .bbox-label {
+            position: absolute; top: -26px; left: -2px; color: #fff;
+            font-size: 0.7rem; font-weight: 600; padding: 2px 8px;
+            border-radius: 4px; display: flex; align-items: center; gap: 4px; white-space: nowrap;
+            letter-spacing: 0.02em; font-family: 'Inter', sans-serif;
+        }
+
+        /* Color Mapping for Bboxes */
+        .color-blue { border-color: #3b82f6; } .color-blue .bbox-label { background-color: #3b82f6; }
+        .color-orange { border-color: #f59e0b; } .color-orange .bbox-label { background-color: #f59e0b; }
+        .color-green { border-color: #10b981; } .color-green .bbox-label { background-color: #10b981; }
+        .color-red { border-color: #ef4444; } .color-red .bbox-label { background-color: #ef4444; }
+        .color-slate { border-color: #64748b; } .color-slate .bbox-label { background-color: #64748b; }
+        .color-cyan { border-color: #06b6d4; } .color-cyan .bbox-label { background-color: #06b6d4; }
+        .color-emerald { border-color: #10b981; } .color-emerald .bbox-label { background-color: #10b981; }
+
+        /* Slide-up Animations */
+        .slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Subtle Scanner Line */
+        .scanner-line {
+            position: absolute; width: 100%; height: 2px;
+            background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.2), transparent);
+            animation: scanLogo 2.5s linear infinite;
+            z-index: 20; pointer-events: none;
+        }
+        @keyframes scanLogo {
+            0% { top: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+    </style>
+</head>
+<body class="flex flex-col relative">
+
+    <div class="bg-shape-1"></div>
+    <div class="bg-shape-2"></div>
+
+    <nav class="glass-nav sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="brand-text text-xl font-bold text-black flex items-center gap-2 tracking-tight">
+                <i data-feather="box" class="text-black w-5 h-5"></i> EcoSort Solutions
+            </h1>
+            <div class="flex gap-4">
+                <a href="/dashboard" class="text-gray-600 border border-gray-300 hover:bg-white px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 bg-white/50">
+                    <i data-feather="layout" class="w-4 h-4"></i> Dashboard
+                </a>
+                <a href="/image-detection" class="bg-black text-white border border-black hover:bg-gray-800 px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 shadow-sm">
+                    <i data-feather="camera" class="w-4 h-4"></i> New Scan
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow py-12 px-4 md:px-8 max-w-7xl mx-auto w-full relative z-10">
+        
+        <div class="text-center mb-12 slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-black tracking-tight mb-3 brand-text">Analysis Report</h2>
+            <p class="text-gray-500 text-sm md:text-base font-medium max-w-2xl mx-auto">Detailed breakdown of identified materials and recycling instructions.</p>
+        </div>
+
+        <div class="glass-panel p-4 mb-12 slide-up delay-1 relative overflow-hidden group border border-gray-200">
+            <div id="imageContainer" class="relative w-full bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex justify-center items-center">
+                <div class="scanner-line" id="scannerLine"></div>
+                <img id="mainUploadedImage" src="" alt="Analyzed Waste" class="w-full h-auto block object-contain max-h-[500px]">
+            </div>
+        </div>
+
+        <div class="slide-up delay-2">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 px-2">
+                <h3 class="text-xl font-bold text-black brand-text flex items-center gap-2">
+                    <i data-feather="list" class="text-black w-5 h-5"></i> Detected Items 
+                    <span id="totalItemsCount" class="bg-black text-white px-2.5 py-0.5 rounded-md text-sm font-semibold ml-2">0</span>
+                </h3>
+            </div>
+
+            <div class="grid grid-cols-12 gap-4 px-6 py-3 bg-gray-100 rounded-t-xl border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">
+                <div class="col-span-6">Classification</div>
+                <div class="col-span-3 text-center">Category</div>
+                <div class="col-span-3 text-right md:text-center">Recyclable</div>
+            </div>
+
+            <div id="tableBody" class="flex flex-col gap-3"></div>
+        </div>
+
+        <div id="degradationPanel" class="glass-panel p-8 mt-12 slide-up delay-3 hidden relative overflow-hidden">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="col-span-1 flex flex-col items-center justify-center pt-2 relative border-r border-gray-200 pr-4">
+                    <h4 class="text-black font-bold uppercase tracking-wider text-sm mb-6 flex items-center gap-2 brand-text"><i data-feather="pie-chart" class="w-4 h-4"></i> Degradation Breakdown</h4>
+                    <div class="w-48 h-48 relative">
+                        <canvas id="wasteChart"></canvas>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-black">
+                            <span id="chartPercentage" class="text-3xl font-bold brand-text">0%</span>
+                            <span class="text-[10px] text-gray-500 uppercase font-semibold text-center mt-1">Non<br>Degradable</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="degradationList" class="col-span-1 md:col-span-2 space-y-4 pt-2">
+                    <h4 class="text-black font-bold flex items-center gap-2 mb-6 tracking-wider text-sm brand-text"><i data-feather="clock" class="text-black w-4 h-4"></i> Estimated Lifespan</h4>
+                </div>
+            </div>
+        </div>
+
+        <div id="recyclingPanel" class="glass-panel p-8 mt-8 slide-up delay-4 hidden relative overflow-hidden">
+            <h4 class="text-black font-bold flex items-center gap-2 mb-8 text-lg tracking-tight brand-text"><i data-feather="info" class="text-black w-5 h-5"></i> Recycling Guidelines</h4>
+            <div id="recyclingList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </div>
+
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            feather.replace();
+            const uploadedImg = localStorage.getItem('ecoSortTempImage');
+            const mainImage = document.getElementById('mainUploadedImage');
+            
+            if(uploadedImg) {
+                mainImage.src = uploadedImg;
+                fetchRealAIData(uploadedImg);
+            } else {
+                window.location.href = "/image-detection"; 
+            }
+        });
+
+        async function fetchRealAIData(imageBase64) {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-20 text-gray-500">
+                    <i data-feather="loader" class="animate-spin w-10 h-10 mb-4 text-black"></i>
+                    <p class="font-semibold text-sm">Analyzing image data...</p>
+                </div>`;
+            feather.replace();
+
+            try {
+                // Assuming standard endpoint setup
+                const response = await fetch('http://127.0.0.1:5000/api/detect', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: imageBase64 })
+                });
+
+                if (!response.ok) throw new Error("API Connection Failed");
+                const realAIData = await response.json();
+
+                tableBody.innerHTML = '';
+                // Remove scanner animation after processing
+                document.getElementById('scannerLine').style.display = 'none';
+                renderDynamicData(realAIData);
+
+            } catch (error) {
+                console.error("Backend Error:", error);
+                document.getElementById('scannerLine').style.display = 'none';
+                tableBody.innerHTML = `
+                    <div class="bg-white border border-red-200 p-8 rounded-xl text-center mx-auto max-w-lg mt-4 slide-up shadow-sm">
+                        <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-100">
+                            <i data-feather="alert-circle" class="w-8 h-8 text-red-500"></i>
+                        </div>
+                        <p class="text-black text-lg font-bold mb-1 brand-text">Analysis Unavailable</p>
+                        <p class="text-gray-500 text-sm font-medium">Could not connect to the processing server. Please try again later.</p>
+                    </div>`;
+                feather.replace();
+            }
+        }
+
+        function renderDynamicData(data) {
+            if(!data || data.length === 0) {
+                document.getElementById('tableBody').innerHTML = `
+                    <div class="bg-white border border-gray-200 p-12 text-center rounded-xl slide-up shadow-sm">
+                        <i data-feather="image" class="w-10 h-10 text-gray-300 mx-auto mb-4"></i>
+                        <p class="text-black font-bold text-lg brand-text">No Items Detected</p>
+                        <p class="text-gray-500 text-sm mt-1">The image does not contain any recognizable materials. Please upload a clearer photo.</p>
+                    </div>`;
+                feather.replace();
+                return;
+            }
+
+            document.getElementById('degradationPanel').classList.remove('hidden');
+            document.getElementById('recyclingPanel').classList.remove('hidden');
+
+            document.getElementById('totalItemsCount').innerText = data.length;
+            const imageContainer = document.getElementById('imageContainer');
+            const tableBody = document.getElementById('tableBody');
+            const degList = document.getElementById('degradationList');
+            const recList = document.getElementById('recyclingList');
+            
+            let nonDegCount = 0;
+            const uniqueCategories = new Set(); 
+
+            data.forEach((item, index) => {
+                if(item.type.includes("Non-Degradable") || item.type.includes("Non")) nonDegCount++;
+
+                // 1. Clean Bounding Boxes
+                const boxHtml = `
+                    <div class="bbox color-${item.colorClass}" style="top: ${item.box.top}%; left: ${item.box.left}%; width: ${item.box.w}%; height: ${item.box.h}%;">
+                        <div class="bbox-label"><span>${item.category}</span> <span class="bg-black/20 px-1 py-0.5 rounded text-[9px] text-white ml-1">${item.conf}</span></div>
+                    </div>`;
+                imageContainer.insertAdjacentHTML('beforeend', boxHtml);
+
+                // 2. Clean Row Cards
+                const isDegradable = item.type.includes('Biodegradable') && !item.type.includes('Non');
+                const badgeColor = isDegradable ? 'green' : 'orange';
+                
+                const rowHtml = `
+                    <div class="grid grid-cols-12 gap-4 items-center bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
+                        <div class="col-span-6 flex items-center gap-4">
+                            <div class="w-14 h-14 bg-gray-50 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0">
+                                <img src="${item.imgCrop}" class="w-full h-full object-cover">
+                            </div>
+                            <span class="font-bold text-black flex flex-col justify-center text-sm brand-text">
+                                <span class="flex items-center gap-2"><i data-feather="${item.icon}" class="w-4 h-4 text-gray-500"></i> ${item.category}</span>
+                            </span>
+                        </div>
+                        <div class="col-span-3 flex justify-center">
+                            <span class="bg-${badgeColor}-50 text-${badgeColor}-700 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border border-${badgeColor}-200">
+                                ${item.type}
+                            </span>
+                        </div>
+                        <div class="col-span-3 flex justify-end md:justify-center">
+                            <span class="text-${item.recyclable ? 'green' : 'red'}-600 font-bold flex items-center gap-1.5 bg-${item.recyclable ? 'green' : 'red'}-50 px-3 py-1.5 rounded-md border border-${item.recyclable ? 'green' : 'red'}-100 text-[10px] uppercase tracking-wider">
+                                <i data-feather="${item.recyclable ? 'check-circle' : 'x-circle'}" class="w-3.5 h-3.5"></i> ${item.recyclable ? 'YES' : 'NO'}
+                            </span>
+                        </div>
+                    </div>`;
+                tableBody.insertAdjacentHTML('beforeend', rowHtml);
+
+                // Ensure unique suggestions based on type
+                if (!uniqueCategories.has(item.type)) {
+                    uniqueCategories.add(item.type);
+
+                    // 3. Degradation Matrix
+                    degList.insertAdjacentHTML('beforeend', `
+                        <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+                            <span class="text-black font-semibold flex items-center gap-3 text-xs tracking-wider uppercase"><div class="p-2 bg-gray-50 rounded-md border border-gray-200"><i data-feather="${item.icon}" class="w-4 h-4 text-gray-600"></i></div> ${item.type}</span>
+                            <span class="${isDegradable ? 'text-green-600' : 'text-orange-600'} font-bold text-sm bg-gray-50 px-3 py-1.5 rounded-md border border-gray-200">${item.time}</span>
+                        </div>
+                    `);
+
+                    // 4. Recycling Directives
+                    let suggestionPoints = item.suggestions.map(s => `<li class="mb-2 pl-4 relative before:content-['•'] before:absolute before:-left-1 before:text-gray-400">${s}</li>`).join('');
+                    recList.insertAdjacentHTML('beforeend', `
+                        <div class="flex items-start gap-4 p-6 bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
+                            <div class="p-3 bg-gray-50 text-black rounded-xl border border-gray-200"><i data-feather="${item.icon}" class="w-5 h-5"></i></div>
+                            <div class="flex-1">
+                                <h5 class="text-black font-bold text-sm border-b border-gray-100 pb-2 mb-3 tracking-wider uppercase brand-text">${item.type} Handling</h5>
+                                <ul class="list-none m-0 text-gray-600 text-xs font-medium leading-relaxed">
+                                    ${suggestionPoints}
+                                </ul>
+                            </div>
+                        </div>
+                    `);
+                }
+            });
+
+            const nonDegPercentage = data.length > 0 ? Math.round((nonDegCount / data.length) * 100) : 0;
+            
+            // Animate percentage counter
+            let currentPercent = 0;
+            const interval = setInterval(() => {
+                if (currentPercent >= nonDegPercentage) {
+                    clearInterval(interval);
+                    document.getElementById('chartPercentage').innerText = nonDegPercentage + '%';
+                } else {
+                    currentPercent++;
+                    document.getElementById('chartPercentage').innerText = currentPercent + '%';
+                }
+            }, 25);
+
+            window.nonDegChartValue = nonDegPercentage;
+            initChart();
+            feather.replace();
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('wasteChart').getContext('2d');
+            const val = window.nonDegChartValue || 0;
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Non-Degradable', 'Degradable'],
+                    datasets: [{ 
+                        data: [val, 100 - val], 
+                        backgroundColor: ['#ef4444', '#10b981'], 
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 5
+                    }]
+                },
+                options: { 
+                    cutout: '75%', 
+                    plugins: { legend: { display: false } }, 
+                    animation: { animateScale: true, animateRotate: true, duration: 1500 },
+                    layout: { padding: 5 }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

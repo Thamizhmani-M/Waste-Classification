@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSort Solutions | Live Camera Feed</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📹</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f3f4f6; 
+            color: #111827; 
+            padding-bottom: 5rem;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        h1, h2, h3, h4, h5, .brand-text { font-family: 'Montserrat', sans-serif; }
+
+        .bg-shape-1 {
+            position: fixed; top: -10%; left: -5%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(200,200,200,0.5) 0%, transparent 70%);
+            filter: blur(60px); pointer-events: none; z-index: -1;
+        }
+        .bg-shape-2 {
+            position: fixed; bottom: -10%; right: -5%; width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, transparent 70%);
+            filter: blur(80px); pointer-events: none; z-index: -1;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+        }
+
+        .slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in-down { animation: fadeInDown 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .scan-overlay { 
+            position: absolute; inset: 0; 
+            background: linear-gradient(180deg, transparent 0%, rgba(16, 185, 129, 0.1) 50%, transparent 100%); 
+            animation: scanLogo 2.5s linear infinite; 
+            pointer-events: none; z-index: 20;
+        }
+        @keyframes scanLogo {
+            0% { top: -100%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <div class="bg-shape-1"></div>
+    <div class="bg-shape-2"></div>
+
+    <nav class="glass-nav sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="brand-text text-xl font-bold text-black flex items-center gap-2 tracking-tight">
+                <i data-feather="box" class="text-black w-5 h-5"></i> EcoSort Solutions
+            </h1>
+            <div class="flex gap-4">
+                <a href="/dashboard" class="text-gray-600 border border-gray-300 hover:bg-white px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 bg-white/50">
+                    <i data-feather="layout" class="w-4 h-4"></i> Dashboard
+                </a>
+                <a href="/" class="bg-white border border-gray-300 text-gray-700 hover:text-black hover:bg-gray-50 px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 shadow-sm">
+                    <i data-feather="arrow-left" class="w-4 h-4"></i> Back
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow py-12 px-4 md:px-8 max-w-7xl mx-auto w-full relative z-10">
+        
+        <div class="text-center mb-12 slide-up">
+            <span class="bg-green-50 border border-green-200 text-green-700 px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase mb-4 inline-block shadow-sm">
+                Live Feed Active
+            </span>
+            <h2 class="text-3xl md:text-4xl font-bold text-black tracking-tight mb-3 brand-text">Live Camera Feed</h2>
+            <p class="text-gray-500 text-sm md:text-base font-medium max-w-2xl mx-auto">Real-time identification and sorting analysis via device camera.</p>
+        </div>
+
+        <div class="glass-panel p-6 mb-12 slide-up relative overflow-hidden border border-gray-200" style="animation-delay: 0.1s;">
+            <div class="absolute top-8 right-8 z-30 flex items-center gap-2 bg-white/90 px-4 py-2 rounded-full border border-gray-200 shadow-sm">
+                <span class="relative flex h-2.5 w-2.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                </span>
+                <span id="liveBadgeText" class="text-xs font-bold text-gray-700 tracking-wider">LIVE</span>
+            </div>
+
+            <div id="videoContainer" class="relative w-full bg-black rounded-xl overflow-hidden shadow-sm flex justify-center items-center">
+                <video id="liveCamFeed" autoplay playsinline class="w-full max-h-[60vh] object-contain"></video>
+                <canvas id="bboxCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-10"></canvas>
+                <div class="scan-overlay"></div> 
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center mt-6 px-2 gap-4">
+                <div class="flex items-center gap-4 w-full md:w-auto justify-between">
+                    <span id="activeStatus" class="flex items-center gap-2 text-green-700 font-bold bg-green-50 border border-green-200 px-4 py-2 rounded-lg text-sm tracking-wider uppercase shadow-sm">
+                        <i data-feather="activity" class="w-4 h-4"></i> Monitoring
+                    </span>
+                    <span class="bg-white px-4 py-2 rounded-lg border border-gray-200 text-gray-500 text-xs font-bold tracking-wider uppercase shadow-sm">
+                        Items Scanned: <span id="detectionCounter" class="text-black font-bold text-base ml-1">0</span>
+                    </span>
+                </div>
+                <button onclick="stopCamera()" class="w-full md:w-auto bg-white hover:bg-red-50 text-red-600 px-6 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all border border-red-200 shadow-sm hover:border-red-300">
+                    <i data-feather="power" class="w-4 h-4"></i> Stop Camera
+                </button>
+            </div>
+        </div>
+
+        <div class="slide-up" style="animation-delay: 0.2s;">
+            <h3 class="text-xl font-bold text-black brand-text flex items-center gap-2 mb-6 border-b border-gray-200 pb-4">
+                <i data-feather="list" class="text-black w-5 h-5"></i> Recent Detections
+            </h3>
+            
+            <div id="detectionsStream" class="flex flex-col gap-4 pr-2 max-h-[800px] overflow-y-auto custom-scroll">
+                <div id="placeholderState" class="flex flex-col items-center justify-center py-20 text-gray-400 bg-white rounded-xl border border-gray-200 border-dashed">
+                    <i data-feather="loader" class="animate-spin w-10 h-10 mb-4 text-gray-300"></i>
+                    <p class="font-semibold tracking-wider uppercase text-sm">Waiting for items to appear...</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <canvas id="captureCanvas" style="display: none;"></canvas>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            feather.replace();
+            startLiveDetection();
+        });
+
+        const liveVideo = document.getElementById('liveCamFeed');
+        const detectionsStream = document.getElementById('detectionsStream');
+        const detectionCountSpan = document.getElementById('detectionCounter');
+        const captureCanvas = document.getElementById('captureCanvas');
+        const captureCtx = captureCanvas.getContext('2d');
+        const bboxCanvas = document.getElementById('bboxCanvas');
+        const bboxCtx = bboxCanvas.getContext('2d');
+        
+        let detectionInterval;
+        let detectionsCount = 0;
+        let isDetecting = false; 
+
+        const getBoxColor = (colorClass) => {
+            const colors = { green: '#10b981', blue: '#3b82f6', orange: '#f59e0b', red: '#ef4444' };
+            return colors[colorClass] || '#64748b';
+        };
+
+        function startLiveDetection() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                    .then(stream => {
+                        liveVideo.srcObject = stream;
+                        liveVideo.onloadedmetadata = () => {
+                            bboxCanvas.width = liveVideo.videoWidth;
+                            bboxCanvas.height = liveVideo.videoHeight;
+                            captureCanvas.width = liveVideo.videoWidth;
+                            captureCanvas.height = liveVideo.videoHeight;
+                        };
+                        detectionInterval = setInterval(captureAndDetect, 1500); 
+                    })
+                    .catch(error => {
+                        console.error("Camera access error:", error);
+                        document.getElementById('videoContainer').innerHTML = `
+                            <div class="flex flex-col items-center justify-center p-20 bg-white w-full h-full">
+                                <i data-feather="camera-off" class="w-12 h-12 mb-4 text-gray-400"></i>
+                                <p class="font-bold text-gray-600">Camera Access Denied or Unavailable</p>
+                            </div>`;
+                        feather.replace();
+                    });
+            }
+        }
+
+        async function captureAndDetect() {
+            if (isDetecting || !liveVideo.videoWidth) return;
+            isDetecting = true; 
+            captureCtx.drawImage(liveVideo, 0, 0, captureCanvas.width, captureCanvas.height);
+            const base64Image = captureCanvas.toDataURL('image/jpeg', 0.8);
+
+            try {
+                const response = await fetch('/api/detect', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: base64Image, source: 'live' })
+                });
+
+                if (response.ok) {
+                    const results = await response.json();
+                    bboxCtx.clearRect(0, 0, bboxCanvas.width, bboxCanvas.height);
+
+                    if (results && results.length > 0) {
+                        const placeholder = document.getElementById('placeholderState');
+                        if(placeholder) placeholder.remove();
+
+                        results.forEach(item => {
+                            updateDetectionCount();
+                            drawBoundingBox(item);
+                            renderNewDetectionCard(item);
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error("API Error:", error);
+            } finally {
+                isDetecting = false; 
+            }
+        }
+
+        function drawBoundingBox(item) {
+            const x = (item.box.left / 100) * bboxCanvas.width;
+            const y = (item.box.top / 100) * bboxCanvas.height;
+            const w = (item.box.w / 100) * bboxCanvas.width;
+            const h = (item.box.h / 100) * bboxCanvas.height;
+            const color = getBoxColor(item.colorClass);
+
+            bboxCtx.strokeStyle = color;
+            bboxCtx.lineWidth = 3;
+            bboxCtx.strokeRect(x, y, w, h);
+
+            bboxCtx.fillStyle = color;
+            bboxCtx.font = "bold 13px Inter";
+            const text = `${item.name} (${item.conf})`;
+            const textWidth = bboxCtx.measureText(text).width;
+            bboxCtx.fillRect(x, y - 26, textWidth + 16, 26);
+            bboxCtx.fillStyle = '#ffffff';
+            bboxCtx.fillText(text, x + 8, y - 8);
+        }
+
+        function updateDetectionCount() {
+            detectionsCount++;
+            detectionCountSpan.innerText = detectionsCount;
+        }
+
+        const uniqueCategories = new Set();
+
+        function renderNewDetectionCard(item) {
+            let suggestionHtml = '';
+            
+            // Adjusted grid: 3 columns for metadata, 9 for suggestions to give more space
+            if (item.suggestions && item.suggestions.length > 0) {
+                let suggestionPoints = item.suggestions.map(s => 
+                    `<li class="mb-2 pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-gray-400 font-medium">${s}</li>`
+                ).join('');
+                
+                suggestionHtml = `
+                    <div class="col-span-1 md:col-span-7 pl-0 md:pl-6 md:border-l border-gray-100 mt-4 md:mt-0 pt-4 md:pt-0">
+                        <h5 class="text-gray-400 font-bold text-[10px] uppercase tracking-[0.15em] mb-3 flex items-center gap-2 brand-text">
+                            <i data-feather="info" class="w-3 h-3"></i> Handling Guide
+                        </h5>
+                        <ul class="list-none text-gray-600 text-[13px] leading-relaxed max-w-full">
+                            ${suggestionPoints}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            const colors = { green: 'emerald', blue: 'cyan', orange: 'orange', red: 'red' };
+            const theme = colors[item.colorClass] || 'slate';
+
+            const detectionCard = `
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md relative fade-in-down overflow-hidden transition-all duration-300 mb-4">
+                    
+                    <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-${theme}-500"></div>
+
+                    <div class="col-span-1 md:col-span-3 flex items-center gap-4 overflow-hidden">
+                        <div class="w-14 h-14 rounded-xl overflow-hidden border border-gray-100 bg-gray-50 shrink-0 shadow-inner">
+                            <img src="${item.imgCrop}?t=${Date.now()}" alt="Crop" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex flex-col min-w-0">
+                            <span class="text-black font-bold text-lg brand-text truncate">${item.name}</span>
+                            <span class="text-[11px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">
+                                Match <span class="text-black font-extrabold ml-1">${item.conf}</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="col-span-1 md:col-span-2 flex flex-col justify-center gap-2 px-2 md:border-l border-gray-100 mt-4 md:mt-0">
+                        <div class="bg-${theme}-50 text-${theme}-700 px-3 py-1 rounded-lg text-[10px] font-extrabold tracking-wider uppercase border border-${theme}-100 inline-block w-fit">
+                            ${item.type}
+                        </div>
+                        <div class="flex items-center gap-1.5 text-[12px] text-gray-500 font-medium">
+                            <span class="opacity-60">Est. Life:</span> 
+                            <span class="text-black font-bold">${item.time}</span>
+                        </div>
+                    </div>
+
+                    ${suggestionHtml}
+                </div>
+            `;
+
+            detectionsStream.insertAdjacentHTML('afterbegin', detectionCard);
+            if (detectionsStream.children.length > 10) detectionsStream.removeChild(detectionsStream.lastChild);
+            feather.replace();
+        }
+
+        function stopCamera() {
+            if (detectionInterval) clearInterval(detectionInterval);
+            if (liveVideo.srcObject) {
+                liveVideo.srcObject.getTracks().forEach(track => track.stop());
+                liveVideo.srcObject = null;
+                bboxCtx.clearRect(0, 0, bboxCanvas.width, bboxCanvas.height);
+                document.getElementById('liveBadgeText').innerText = 'OFFLINE';
+                const badge = document.getElementById('liveBadgeText').parentElement;
+                badge.classList.replace('border-gray-200', 'bg-gray-100');
+                if(badge.querySelector('.animate-ping')) badge.querySelector('.animate-ping').remove();
+                badge.querySelector('.bg-red-500').classList.replace('bg-red-500', 'bg-gray-400');
+                document.getElementById('activeStatus').innerHTML = `<i data-feather="power" class="w-4 h-4"></i> Stopped`;
+                document.getElementById('activeStatus').className = "flex items-center gap-2 text-gray-400 font-bold bg-gray-100 border border-gray-200 px-4 py-2 rounded-lg text-sm uppercase";
+                feather.replace();
+            }
+        }
+    </script>
+</body>
+</html>

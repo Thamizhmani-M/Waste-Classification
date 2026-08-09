@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSort Solutions | Video Analysis Report</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎥</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f3f4f6; /* Light gray background */
+            color: #111827; /* Dark text */
+            padding-bottom: 5rem;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        h1, h2, h3, h4, h5, .brand-text { font-family: 'Montserrat', sans-serif; }
+
+        /* Abstract Background Elements for Glass effect */
+        .bg-shape-1 {
+            position: fixed; top: -10%; left: -5%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(200,200,200,0.5) 0%, transparent 70%);
+            filter: blur(60px); pointer-events: none; z-index: -1;
+        }
+        .bg-shape-2 {
+            position: fixed; bottom: -10%; right: -5%; width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, transparent 70%);
+            filter: blur(80px); pointer-events: none; z-index: -1;
+        }
+
+        /* Standard Glassmorphism CSS */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+        }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.6s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Insight Panels Dropdown */
+        .insight-panel { 
+            max-height: 0; opacity: 0; overflow: hidden; 
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); margin-top: 0; 
+        }
+        .insight-panel.open { max-height: 1000px; opacity: 1; margin-top: 2rem; overflow: visible; }
+        
+        #moreBtnIcon { transition: transform 0.3s ease; }
+        #moreBtn.active #moreBtnIcon { transform: rotate(180deg); }
+
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px; }
+    </style>
+</head>
+<body class="flex flex-col relative">
+
+    <div class="bg-shape-1"></div>
+    <div class="bg-shape-2"></div>
+
+    <nav class="glass-nav sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="brand-text text-xl font-bold text-black flex items-center gap-2 tracking-tight">
+                <i data-feather="box" class="text-black w-5 h-5"></i> EcoSort Solutions
+            </h1>
+            <a href="/video-detection" class="bg-white hover:bg-gray-50 text-gray-700 px-5 py-2 rounded-lg text-sm font-semibold transition-all border border-gray-200 shadow-sm flex items-center gap-2">
+                <i data-feather="arrow-left" class="w-4 h-4"></i> New Scan
+            </a>
+        </div>
+    </nav>
+
+    <main class="flex-grow py-8 px-4 md:px-8 max-w-7xl mx-auto w-full relative z-10">
+        
+        <div class="text-center mb-10 fade-in">
+            <h2 class="text-3xl md:text-4xl font-bold text-black brand-text tracking-tight mb-2">Video Analysis Report</h2>
+            <p class="text-gray-500 text-sm md:text-base font-medium">Comprehensive frame-by-frame material analysis.</p>
+        </div>
+
+        <div class="glass-panel p-6 mb-10 fade-in flex flex-col md:flex-row gap-8 items-center border border-gray-200">
+            <div class="relative w-full md:w-1/2 aspect-video bg-gray-100 rounded-xl overflow-hidden shadow-sm border border-gray-200">
+                <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=800&q=80" alt="Video Placeholder" class="w-full h-full object-cover opacity-90">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="bg-white/90 p-4 rounded-full backdrop-blur-md border border-gray-200 shadow-md">
+                        <i data-feather="play" class="w-8 h-8 text-black ml-1"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full md:w-1/2 px-2">
+                <h3 class="text-xl font-bold text-black brand-text mb-4">Analysis Summary</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                        <p class="text-gray-500 text-xs uppercase font-semibold tracking-wider">Frames Analyzed</p>
+                        <p class="text-3xl font-bold text-black mt-2 brand-text" id="sumFrames">0</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                        <p class="text-gray-500 text-xs uppercase font-semibold tracking-wider">Total Items Found</p>
+                        <p class="text-3xl font-bold text-black mt-2 brand-text" id="sumDetections">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fade-in" style="animation-delay: 0.1s;">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b border-gray-200 pb-4">
+                <h3 class="text-xl font-bold text-black tracking-tight brand-text flex items-center gap-2">
+                    <i data-feather="layers" class="text-black w-5 h-5"></i> Frame Breakdown
+                </h3>
+                
+                <div class="relative inline-block text-left z-20">
+                    <button onclick="toggleMoreMenu()" id="moreBtn" class="bg-white hover:bg-gray-50 text-black px-6 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition border border-gray-300 shadow-sm disabled:opacity-50" disabled>
+                        View Insights <i data-feather="chevron-down" id="moreBtnIcon" class="w-4 h-4"></i>
+                    </button>
+                    <div id="moreMenu" class="absolute hidden right-0 mt-2 w-56 origin-top-right rounded-xl bg-white border border-gray-200 shadow-lg opacity-0 scale-95 transition-all duration-200 transform">
+                        <div class="p-2 space-y-1">
+                            <button onclick="toggleInsightPanel('degradation')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-black rounded-lg flex items-center justify-between font-semibold transition">
+                                Lifespan Estimate <span id="degradationTick" class="text-black hidden"><i data-feather="check" class="w-4 h-4"></i></span>
+                            </button>
+                            <button onclick="toggleInsightPanel('recycling')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-black rounded-lg flex items-center justify-between font-semibold transition">
+                                Recycling Guidelines <span id="recyclingTick" class="text-black hidden"><i data-feather="check" class="w-4 h-4"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="framesContainer" class="flex flex-col gap-6 w-full h-auto">
+                <div id="loadingState" class="flex flex-col items-center justify-center py-16 text-gray-500 bg-white rounded-2xl border border-gray-200 shadow-sm border-dashed">
+                    <i data-feather="loader" class="animate-spin w-8 h-8 mb-4 text-black"></i>
+                    <p class="font-semibold tracking-wider uppercase text-sm">Processing Video Data...</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="degradationPanel" class="insight-panel glass-panel p-8 mt-8 relative">
+            <button onclick="closeInsightPanel('degradation')" class="absolute top-6 right-6 text-gray-400 hover:text-red-500 transition"><i data-feather="x" class="w-5 h-5"></i></button>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="col-span-1 flex flex-col items-center justify-center pt-2 border-r border-gray-200 pr-4">
+                    <h4 class="text-black font-bold uppercase tracking-wider text-sm mb-6 brand-text flex items-center gap-2">
+                        <i data-feather="pie-chart" class="w-4 h-4"></i> Degradation Ratio
+                    </h4>
+                    <div class="w-48 h-48 relative">
+                        <canvas id="wasteChart"></canvas>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                            <span id="chartPercentage" class="text-3xl font-bold text-black brand-text">0%</span>
+                            <span class="text-[10px] text-gray-500 uppercase font-semibold text-center leading-tight mt-1">Non<br>Degradable</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="degradationList" class="col-span-1 md:col-span-2 space-y-4 pt-2 pl-2">
+                    <h4 class="text-black font-bold flex items-center gap-2 mb-4 brand-text tracking-tight text-lg"><i data-feather="clock" class="w-5 h-5"></i> Estimated Lifespan Summary</h4>
+                </div>
+            </div>
+        </div>
+
+        <div id="recyclingPanel" class="insight-panel glass-panel p-8 mt-8 relative">
+            <button onclick="closeInsightPanel('recycling')" class="absolute top-6 right-6 text-gray-400 hover:text-red-500 transition"><i data-feather="x" class="w-5 h-5"></i></button>
+            <h4 class="text-black font-bold flex items-center gap-2 mb-8 brand-text text-lg tracking-tight"><i data-feather="info" class="w-5 h-5"></i> Material Handling & Recycling Guidelines</h4>
+            <div id="recyclingList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </div>
+
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            feather.replace();
+            testVideoAIData();
+        });
+
+        // Simulating Backend Response
+        function testVideoAIData() {
+            setTimeout(() => {
+                document.getElementById('loadingState').remove();
+                
+                const videoData = {
+                    summary: { framesAnalyzed: 3, totalDetections: 7 },
+                    frames: [
+                        {
+                            frameId: "Sampled Frame 1", time: "00:02",
+                            detections: [
+                                { category: "Plastic Bottle", type: "Non-Degradable", recyclable: true, colorClass: "blue", icon: "package" },
+                                { category: "Crumpled Paper", type: "Degradable", recyclable: true, colorClass: "emerald", icon: "file-text" },
+                                { category: "Banana Peel", type: "Degradable", recyclable: false, colorClass: "green", icon: "wind" },
+                                { category: "Aluminium Can", type: "Non-Degradable", recyclable: true, colorClass: "orange", icon: "database" }
+                            ]
+                        },
+                        {
+                            frameId: "Sampled Frame 2", time: "00:04",
+                            detections: [
+                                { category: "Aluminium Can", type: "Non-Degradable", recyclable: true, colorClass: "orange", icon: "database" }
+                            ]
+                        },
+                        {
+                            frameId: "Sampled Frame 3", time: "00:05",
+                            detections: [
+                                { category: "Banana Peel", type: "Degradable", recyclable: false, colorClass: "green", icon: "wind" },
+                                { category: "Crumpled Paper", type: "Degradable", recyclable: true, colorClass: "emerald", icon: "file-text" }
+                            ]
+                        }
+                    ],
+                    uniqueClasses: [
+                        { category: "Plastic Bottle", type: "Non-Degradable", time: "450 Years", icon: "package", colorClass: "blue", suggestions: ["Plastic chairs and outdoor furniture", "Durable storage containers"] },
+                        { category: "Aluminium Can", type: "Non-Degradable", time: "100 Years", icon: "database", colorClass: "orange", suggestions: ["New metal beverage cans", "Bicycle parts"] },
+                        { category: "Crumpled Paper", type: "Degradable", time: "2-6 Weeks", icon: "file-text", colorClass: "emerald", suggestions: ["New paper materials", "Cardboard boxes"] },
+                        { category: "Banana Peel", type: "Degradable", time: "2-4 Weeks", icon: "wind", colorClass: "green", suggestions: ["Organic nutrient-rich compost", "Biogas generation"] }
+                    ]
+                };
+
+                renderVideoData(videoData);
+                document.getElementById('moreBtn').disabled = false;
+            }, 1000);
+        }
+
+        function renderVideoData(data) {
+            document.getElementById('sumFrames').innerText = data.summary.framesAnalyzed;
+            document.getElementById('sumDetections').innerText = data.summary.totalDetections;
+
+            const framesContainer = document.getElementById('framesContainer');
+            
+            data.frames.forEach(frame => {
+                
+                let detectionRows = `
+                    <div class="grid grid-cols-12 gap-4 px-4 py-2 text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3 hidden md:grid">
+                        <div class="col-span-6">Material Identified</div>
+                        <div class="col-span-3 text-center">Category</div>
+                        <div class="col-span-3 text-right md:text-center">Recyclable</div>
+                    </div>
+                `;
+                
+                frame.detections.forEach(det => {
+                    // Semantic colors for clean light theme
+                    const typeColor = det.type === 'Degradable' ? 'green' : 'orange';
+                    const recColor = det.recyclable ? 'green' : 'red';
+                    const recIcon = det.recyclable ? 'check-circle' : 'x-circle';
+                    const recText = det.recyclable ? 'Yes' : 'No';
+                    
+                    detectionRows += `
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-white p-3 rounded-lg border border-gray-200 mb-2 hover:shadow-sm transition">
+                            <div class="col-span-1 md:col-span-6 flex items-center gap-3 pl-2">
+                                <i data-feather="${det.icon}" class="w-4 h-4 text-gray-400"></i>
+                                <span class="text-black font-semibold text-sm md:text-base">${det.category}</span>
+                            </div>
+                            
+                            <div class="col-span-1 md:col-span-3 flex justify-start md:justify-center">
+                                <span class="bg-${typeColor}-50 text-${typeColor}-700 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border border-${typeColor}-200">
+                                    ${det.type}
+                                </span>
+                            </div>
+
+                            <div class="col-span-1 md:col-span-3 flex justify-start md:justify-end lg:justify-center">
+                                <span class="text-${recColor}-600 font-bold flex items-center gap-1.5 text-xs px-3 py-1 bg-${recColor}-50 rounded-md border border-${recColor}-100 uppercase tracking-wider">
+                                    <i data-feather="${recIcon}" class="w-3.5 h-3.5"></i> ${recText}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const frameCard = `
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm relative h-auto w-full">
+                        <div class="absolute left-0 top-0 bottom-0 w-1 bg-black rounded-l-xl"></div>
+                        <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
+                            <h4 class="text-black font-bold flex items-center gap-2 pl-3 brand-text">
+                                <i data-feather="image" class="w-4 h-4 text-gray-400"></i> ${frame.frameId}
+                            </h4>
+                            <span class="text-xs font-semibold text-gray-500 bg-gray-50 px-2.5 py-1 rounded-md border border-gray-200">Time: ${frame.time}</span>
+                        </div>
+                        <div class="pl-3 pr-1 w-full h-auto">
+                            ${detectionRows}
+                        </div>
+                    </div>
+                `;
+                framesContainer.innerHTML += frameCard;
+            });
+
+            // Populate Panels
+            const degList = document.getElementById('degradationList');
+            const recList = document.getElementById('recyclingList');
+            let nonDegCount = 0;
+
+            data.uniqueClasses.forEach(item => {
+                if(item.type === "Non-Degradable") nonDegCount++;
+
+                degList.innerHTML += `
+                    <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+                        <span class="text-black font-semibold flex items-center gap-3 text-xs tracking-wider uppercase"><div class="p-2 bg-gray-50 rounded-md border border-gray-200"><i data-feather="${item.icon}" class="w-4 h-4 text-gray-600"></i></div> ${item.category}</span>
+                        <span class="${item.type === 'Degradable' ? 'text-green-600' : 'text-orange-600'} font-bold text-sm bg-gray-50 px-3 py-1.5 rounded-md border border-gray-200">${item.time}</span>
+                    </div>`;
+
+                let suggestionPoints = item.suggestions.map(s => `<li class="mb-2 pl-4 relative before:content-['•'] before:absolute before:-left-1 before:text-gray-400">${s}</li>`).join('');
+                recList.innerHTML += `
+                    <div class="flex items-start gap-4 p-6 bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
+                        <div class="p-3 bg-gray-50 text-black rounded-xl border border-gray-200"><i data-feather="${item.icon}" class="w-5 h-5"></i></div>
+                        <div class="flex-1">
+                            <h5 class="text-black font-bold text-sm border-b border-gray-100 pb-2 mb-3 tracking-wider uppercase brand-text">${item.category} Handling</h5>
+                            <ul class="list-none m-0 text-gray-600 text-xs font-medium leading-relaxed">
+                                ${suggestionPoints}
+                            </ul>
+                        </div>
+                    </div>`;
+            });
+
+            const nonDegPercentage = Math.round((nonDegCount / data.uniqueClasses.length) * 100);
+            document.getElementById('chartPercentage').innerText = nonDegPercentage + '%';
+            window.nonDegChartValue = nonDegPercentage;
+
+            feather.replace();
+        }
+
+        // More Menu Logic
+        const moreBtn = document.getElementById('moreBtn');
+        const moreMenu = document.getElementById('moreMenu');
+        let panelsState = { degradation: false, recycling: false };
+        let chartInitialized = false;
+
+        function toggleMoreMenu() {
+            if(moreMenu.classList.contains('hidden')) {
+                moreMenu.classList.remove('hidden');
+                setTimeout(() => { moreMenu.classList.replace('opacity-0', 'opacity-100'); moreMenu.classList.replace('scale-95', 'scale-100'); }, 10);
+                moreBtn.classList.add('active');
+            } else { closeMoreMenu(); }
+        }
+
+        function closeMoreMenu() {
+            moreMenu.classList.replace('opacity-100', 'opacity-0'); moreMenu.classList.replace('scale-100', 'scale-95');
+            setTimeout(() => { moreMenu.classList.add('hidden'); }, 200);
+            moreBtn.classList.remove('active');
+        }
+        
+        document.addEventListener('click', (e) => { 
+            if(!moreBtn.contains(e.target) && !moreMenu.contains(e.target)) closeMoreMenu(); 
+        });
+
+        function toggleInsightPanel(type) {
+            const panel = document.getElementById(type + 'Panel');
+            const tick = document.getElementById(type + 'Tick');
+
+            if(!panelsState[type]) {
+                panel.classList.add('open');
+                tick.classList.remove('hidden');
+                panelsState[type] = true;
+                if(type === 'degradation' && !chartInitialized) setTimeout(initChart, 600);
+                setTimeout(() => window.scrollTo({ top: panel.offsetTop - 80, behavior: 'smooth' }), 300);
+            } else { closeInsightPanel(type); }
+            closeMoreMenu();
+        }
+
+        function closeInsightPanel(type) {
+            document.getElementById(type + 'Panel').classList.remove('open');
+            document.getElementById(type + 'Tick').classList.add('hidden');
+            panelsState[type] = false;
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('wasteChart').getContext('2d');
+            const nonDeg = window.nonDegChartValue || 0; 
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Non-Degradable', 'Degradable'],
+                    datasets: [{ 
+                        data: [nonDeg, 100 - nonDeg], 
+                        backgroundColor: ['#ef4444', '#10b981'], 
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 5
+                    }] 
+                },
+                options: { 
+                    cutout: '75%', 
+                    plugins: { legend: { display: false } }, 
+                    animation: { animateScale: true, animateRotate: true, duration: 1500 },
+                    layout: { padding: 5 }
+                }
+            });
+            chartInitialized = true;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSort Solutions | Photo Analysis</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖼️</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+            color: #111827; /* Dark text */
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        h1, h2, h3, h4, h5, .brand-text { font-family: 'Montserrat', sans-serif; }
+
+        /* Abstract Background Elements for Glass effect */
+        .bg-shape-1 {
+            position: fixed; top: -10%; left: -5%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(200,200,200,0.5) 0%, transparent 70%);
+            filter: blur(60px); pointer-events: none; z-index: -1;
+        }
+        .bg-shape-2 {
+            position: fixed; bottom: -10%; right: -5%; width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, transparent 70%);
+            filter: blur(80px); pointer-events: none; z-index: -1;
+        }
+
+        /* Standard Glassmorphism CSS */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            border-radius: 24px;
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+        }
+
+        /* Main Card Animation */
+        .main-card {
+            animation: cardEntrance 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        @keyframes cardEntrance { to { opacity: 1; transform: translateY(0); } }
+
+        /* Modern Upload Zone */
+        .drop-area {
+            border: 2px dashed #cbd5e1;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 40px 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .drop-area:hover {
+            border-color: #111827;
+            background: rgba(248, 250, 252, 0.8);
+        }
+        .drop-area i {
+            color: #64748b;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+        .drop-area:hover i { color: #111827; transform: scale(1.05); }
+
+        /* Action Buttons */
+        .btn-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        
+        .btn-outline {
+            background: #ffffff; color: #111827; border: 1px solid #e2e8f0;
+            padding: 14px 20px; border-radius: 12px; font-weight: 600; font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: all 0.2s ease; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .btn-outline:hover { background: #f8fafc; border-color: #cbd5e1; transform: translateY(-1px); }
+
+        .btn-black {
+            background: #111827; color: #ffffff; border: 1px solid #111827;
+            padding: 14px 20px; border-radius: 12px; font-weight: 600; font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: all 0.2s ease; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn-black:hover { background: #1f2937; transform: translateY(-1px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .btn-black:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+        /* Preview Section */
+        #previewSection { display: none; margin-top: 1rem; animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .img-wrap {
+            position: relative; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin-bottom: 1.5rem;
+            border: 1px solid rgba(0,0,0,0.05); background: #f8fafc;
+        }
+
+        /* Clean Scanning overlay effect */
+        .img-wrap::after {
+            content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(16, 185, 129, 0.3), transparent);
+            animation: scanline 2s linear infinite; display: none; pointer-events: none;
+        }
+        .scanning .img-wrap::after { display: block; }
+        @keyframes scanline { 0% { top: -100%; } 100% { top: 100%; } }
+
+        #imgElement { width: 100%; display: block; max-height: 350px; object-fit: contain; }
+        #webcamVideo { width: 100%; display: none; max-height: 350px; object-fit: cover; }
+
+        /* Hidden Inputs */
+        input[type="file"] { display: none; }
+
+        @media (max-width: 480px) { .btn-container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div class="bg-shape-1"></div>
+    <div class="bg-shape-2"></div>
+
+    <nav class="glass-nav sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="brand-text text-xl font-bold text-black flex items-center gap-2 tracking-tight">
+                <i data-feather="box" class="text-black w-5 h-5"></i> EcoSort Solutions
+            </h1>
+            <a href="/detect" class="text-gray-500 hover:text-black font-semibold text-sm transition flex items-center gap-2">
+                <i data-feather="arrow-left" class="w-4 h-4"></i> Back
+            </a>
+        </div>
+    </nav>
+
+    <div class="flex-grow flex items-center justify-center p-6 relative z-10">
+        <div class="glass-panel main-card w-full max-w-lg p-8 text-center">
+            
+            <h2 class="text-3xl font-bold brand-text text-black mb-2">Image Analysis</h2>
+            <p class="text-gray-500 text-sm font-medium mb-8">Please upload an image or use your camera to identify the material.</p>
+
+            <div id="selectionArea">
+                <div class="drop-area" onclick="document.getElementById('fileInput').click()">
+                    <i data-feather="upload-cloud" class="w-12 h-12 mx-auto block"></i>
+                    <h4 class="text-black font-semibold text-lg mt-2">Click to Upload</h4>
+                    <p class="text-gray-400 text-xs font-medium mt-1">Supported formats: JPG, PNG, WEBP</p>
+                </div>
+
+                <div class="btn-container">
+                    <button class="btn-outline" onclick="document.getElementById('fileInput').click()">
+                        <i data-feather="image" class="w-4 h-4"></i> Browse Files
+                    </button>
+                    <button class="btn-black" onclick="startWebcam()">
+                        <i data-feather="camera" class="w-4 h-4"></i> Open Camera
+                    </button>
+                </div>
+            </div>
+
+            <input type="file" id="fileInput" accept="image/*">
+
+            <div id="previewSection">
+                <div class="img-wrap" id="imgContainer">
+                    <video id="webcamVideo" autoplay playsinline></video>
+                    <img id="imgElement" src="" alt="Preview">
+                </div>
+                
+                <div class="btn-container" id="previewButtons">
+                    <button class="btn-outline" onclick="resetUI()">
+                        Cancel
+                    </button>
+                    <button id="actionBtn" class="btn-black w-full" style="grid-column: span 1;" onclick="startYOLODetection()">
+                        Analyze Image <i data-feather="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="text-center py-6 text-gray-500 text-xs font-medium border-t border-gray-200 mt-auto bg-white/50 backdrop-blur-md">
+        &copy; 2026 EcoSort Solutions. All rights reserved.
+    </footer>
+
+    <script>
+        // Initialize Icons
+        feather.replace();
+
+        const fileInput = document.getElementById('fileInput');
+        const selectionArea = document.getElementById('selectionArea');
+        const previewSection = document.getElementById('previewSection');
+        const imgElement = document.getElementById('imgElement');
+        const webcamVideo = document.getElementById('webcamVideo');
+        const actionBtn = document.getElementById('actionBtn');
+        const imgContainer = document.getElementById('imgContainer');
+        let stream = null;
+
+        // 1. Handle File Upload Selection
+        fileInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imgElement.src = e.target.result;
+                    imgElement.style.display = 'block';
+                    webcamVideo.style.display = 'none';
+                    
+                    selectionArea.style.display = 'none';
+                    previewSection.style.display = 'block';
+                    
+                    actionBtn.innerHTML = 'Analyze Image <i data-feather="arrow-right" class="w-4 h-4"></i>';
+                    feather.replace(); // Refresh icons
+                    actionBtn.onclick = startYOLODetection;
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        // 2. Start Webcam
+        async function startWebcam() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                webcamVideo.srcObject = stream;
+                
+                webcamVideo.style.display = 'block';
+                imgElement.style.display = 'none';
+                
+                selectionArea.style.display = 'none';
+                previewSection.style.display = 'block';
+                
+                // Switch button to Capture mode
+                actionBtn.innerHTML = '<i data-feather="aperture" class="w-4 h-4"></i> Capture Photo';
+                feather.replace();
+                actionBtn.onclick = capturePhoto;
+            } catch (err) {
+                alert("Camera access denied or not available. Please check permissions.");
+            }
+        }
+
+        // 3. Capture Photo from Video Stream
+        function capturePhoto() {
+            const canvas = document.createElement('canvas');
+            canvas.width = webcamVideo.videoWidth;
+            canvas.height = webcamVideo.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(webcamVideo, 0, 0);
+            
+            const dataUrl = canvas.toDataURL('image/png');
+            imgElement.src = dataUrl;
+            
+            if (stream) stream.getTracks().forEach(track => track.stop());
+            
+            webcamVideo.style.display = 'none';
+            imgElement.style.display = 'block';
+            
+            // Switch button to Analyze mode
+            actionBtn.innerHTML = 'Analyze Image <i data-feather="arrow-right" class="w-4 h-4"></i>';
+            feather.replace();
+            actionBtn.onclick = startYOLODetection;
+        }
+
+        // 4. Reset UI
+        function resetUI() {
+            if (stream) stream.getTracks().forEach(track => track.stop());
+            previewSection.style.display = 'none';
+            selectionArea.style.display = 'block';
+            imgContainer.classList.remove('scanning');
+            fileInput.value = "";
+        }
+
+        // 5. START AI DETECTION & REDIRECT
+        function startYOLODetection() {
+            // Visual feedback for scanning
+            imgContainer.classList.add('scanning');
+            
+            // Button loading state
+            actionBtn.innerHTML = '<i data-feather="loader" class="w-4 h-4 animate-spin"></i> Analyzing...';
+            feather.replace();
+            actionBtn.disabled = true;
+            
+            // Save the captured/uploaded image to Browser's Local Storage for the result page
+            const currentImage = imgElement.src;
+            localStorage.setItem('ecoSortTempImage', currentImage);
+            
+            // Redirect to result page after a slight delay
+            setTimeout(() => {
+                window.location.href = '/image-result'; 
+            }, 800);
+        }
+    </script>
+    
+</body>
+</html>

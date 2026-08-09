@@ -1,0 +1,8 @@
+train: ./train/images  # Unga training dataset folder path
+val: ./valid/images    # Unga validation dataset folder path
+
+# Number of classes
+nc: 6
+
+# Class names (Dataset la neenga label panna adhe order la irukkanum)
+names: ['Paper_Waste', 'Plastic_Waste', 'Plastic_Bottles', 'Glass', 'Organic_Waste', 'E_Waste']

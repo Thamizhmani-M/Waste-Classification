@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSort Solutions | Video Analysis</title>
+     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎥</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f3f4f6; /* Light gray background */
+            color: #111827; /* Dark text */
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        h1, h2, h3, h4, h5, .brand-text { font-family: 'Montserrat', sans-serif; }
+
+        /* Abstract Background Elements for Glass effect */
+        .bg-shape-1 {
+            position: fixed; top: -10%; left: -5%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(200,200,200,0.5) 0%, transparent 70%);
+            filter: blur(60px); pointer-events: none; z-index: -1;
+        }
+        .bg-shape-2 {
+            position: fixed; bottom: -10%; right: -5%; width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, transparent 70%);
+            filter: blur(80px); pointer-events: none; z-index: -1;
+        }
+
+        /* Standard Glassmorphism CSS */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            border-radius: 24px;
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+        }
+
+        /* Slide Up Animation */
+        .slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(30px); }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Modern Upload Zone */
+        .drop-area {
+            border: 2px dashed #cbd5e1;
+            background: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .drop-area:hover, .drop-zone-active {
+            border-color: #111827;
+            background: rgba(248, 250, 252, 0.8);
+        }
+        .drop-area i {
+            color: #64748b;
+            transition: all 0.3s ease;
+        }
+        .drop-area:hover i, .drop-zone-active i { color: #111827; transform: scale(1.05); }
+
+        /* Action Buttons */
+        .btn-outline {
+            background: #ffffff; color: #111827; border: 1px solid #e2e8f0;
+            border-radius: 12px; font-weight: 600; font-size: 0.9rem;
+            transition: all 0.2s ease; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .btn-outline:hover { background: #f8fafc; border-color: #cbd5e1; transform: translateY(-1px); }
+
+        .btn-black {
+            background: #111827; color: #ffffff; border: 1px solid #111827;
+            border-radius: 12px; font-weight: 600; font-size: 0.9rem;
+            transition: all 0.2s ease; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn-black:hover { background: #1f2937; transform: translateY(-1px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .btn-black:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+        .btn-record { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; transition: all 0.2s; }
+        .btn-record:hover { background: #fecaca; border-color: #fca5a5; }
+        .btn-recording { background: #111827; color: #ef4444; border: 1px solid #111827; }
+
+        /* Video Container */
+        .video-container {
+            aspect-ratio: 16 / 9;
+            background: #f8fafc;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+        }
+        .mirror-cam { transform: scaleX(-1); }
+
+        .error-shake {
+            animation: shake 0.5s ease-in-out;
+            border-color: #ef4444 !important;
+            background-color: rgba(254, 226, 226, 0.5) !important;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-shape-1"></div>
+    <div class="bg-shape-2"></div>
+
+    <nav class="glass-nav sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="brand-text text-xl font-bold text-black flex items-center gap-2 tracking-tight">
+                <i data-feather="box" class="text-black w-5 h-5"></i> EcoSort Solutions
+            </h1>
+            <a href="/detect" class="text-gray-500 hover:text-black font-semibold text-sm transition flex items-center gap-2">
+                <i data-feather="arrow-left" class="w-4 h-4"></i> Back
+            </a>
+        </div>
+    </nav>
+
+    <main class="flex-grow flex items-center justify-center py-10 px-4 md:px-6 z-10 relative">
+        <div class="max-w-2xl w-full glass-panel p-8 md:p-10 slide-up">
+            
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-black brand-text tracking-tight">Video Analysis</h2>
+                <p class="text-gray-500 text-sm font-medium mt-2">Upload or record a video for processing</p>
+                <div class="inline-flex items-center gap-2 bg-gray-100 text-gray-600 px-3 py-1 rounded-md text-xs font-semibold mt-4 border border-gray-200">
+                    <i data-feather="clock" class="w-3.5 h-3.5"></i> Max Duration: 5 Minutes
+                </div>
+            </div>
+
+            <div id="uploadArea" class="fade-in">
+                <div id="dropZone" onclick="document.getElementById('videoInput').click()"
+                     class="drop-area rounded-2xl py-12 flex flex-col items-center justify-center cursor-pointer group">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 border border-gray-200 shadow-sm group-hover:bg-gray-50 transition">
+                        <i data-feather="upload-cloud" class="w-8 h-8"></i>
+                    </div>
+                    <p class="text-black font-bold tracking-wide text-lg brand-text">Drag & Drop Video</p>
+                    <p class="text-gray-400 text-xs mt-2 font-medium">Supported formats: MP4, WebM, OGG</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                    <button onclick="document.getElementById('videoInput').click()" class="btn-outline py-3.5 flex items-center justify-center gap-2">
+                        <i data-feather="folder" class="w-4 h-4"></i> Browse Files
+                    </button>
+                    <button onclick="openWebcam()" class="btn-black py-3.5 flex items-center justify-center gap-2">
+                        <i data-feather="video" class="w-4 h-4"></i> Record Video
+                    </button>
+                </div>
+            </div>
+
+            <input type="file" id="videoInput" class="hidden" accept="video/*">
+
+            <div id="cameraArea" class="hidden fade-in text-center">
+                <div class="video-container mb-6">
+                    <video id="liveCam" autoplay muted playsinline class="w-full h-full object-cover mirror-cam"></video>
+                    
+                    <div id="recordingBadge" class="hidden absolute top-4 right-4 bg-white/90 text-red-500 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 border border-gray-200 shadow-sm backdrop-blur-md tracking-wider">
+                        <span class="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span> REC <span id="recordTimer">0:00</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <button id="recordBtn" onclick="toggleRecording()" class="btn-record font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 uppercase tracking-wide text-sm">
+                        <i data-feather="circle" class="w-4 h-4 fill-current"></i> Start Recording
+                    </button>
+                    <button onclick="closeWebcam()" class="text-gray-500 text-sm font-semibold hover:text-black transition mt-2">
+                        Cancel Recording
+                    </button>
+                </div>
+            </div>
+
+            <div id="playerArea" class="hidden fade-in">
+                <div class="video-container mb-6">
+                    <video id="videoPreview" controls class="w-full h-full object-contain"></video>
+                </div>
+                
+                <div class="flex flex-col gap-4">
+                    <button id="processBtn" onclick="startVideoAI()" class="btn-black py-3.5 rounded-xl flex items-center justify-center gap-2">
+                        <span id="btnText" class="font-bold tracking-wide">Analyze Video</span>
+                        <i data-feather="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="resetUI()" class="text-gray-500 text-sm font-semibold hover:text-black transition mt-1 text-center">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+
+            <div id="statusBox" class="hidden mt-6 p-4 rounded-xl flex items-center justify-center gap-3 text-sm font-medium border"></div>
+
+        </div>
+    </main>
+
+    <script>
+        feather.replace();
+
+        // DOM Elements
+        const videoInput = document.getElementById('videoInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const cameraArea = document.getElementById('cameraArea');
+        const playerArea = document.getElementById('playerArea');
+        const videoPreview = document.getElementById('videoPreview');
+        const dropZone = document.getElementById('dropZone');
+        const statusBox = document.getElementById('statusBox');
+        
+        // Camera Elements
+        const liveCam = document.getElementById('liveCam');
+        const recordBtn = document.getElementById('recordBtn');
+        const recordingBadge = document.getElementById('recordingBadge');
+        const recordTimer = document.getElementById('recordTimer');
+
+        // Recording Variables
+        let cameraStream = null;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let timerInterval = null;
+        let secondsRecorded = 0;
+        const MAX_TIME = 300; // 5 mins
+
+        let videoFileToSend = null; 
+
+        /* ================= FILE UPLOAD LOGIC ================= */
+        videoInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        
+        ['dragenter', 'dragover'].forEach(n => dropZone.addEventListener(n, e => { e.preventDefault(); dropZone.classList.add('drop-zone-active'); }));
+        ['dragleave', 'drop'].forEach(n => dropZone.addEventListener(n, e => { e.preventDefault(); dropZone.classList.remove('drop-zone-active'); }));
+        dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drop-zone-active'); handleFile(e.dataTransfer.files[0]); });
+
+        function handleFile(file) {
+            if (!file) return;
+            if (!file.type.startsWith('video/')) return showError("Invalid format: Only video files are allowed.");
+
+            videoFileToSend = file;
+
+            const video = document.createElement('video');
+            video.preload = 'metadata';
+            video.onloadedmetadata = function() {
+                window.URL.revokeObjectURL(video.src);
+                if (video.duration > MAX_TIME) {
+                    showError("File too large: Video must be under 5 minutes.");
+                    videoInput.value = "";
+                    videoFileToSend = null;
+                } else {
+                    loadPreview(URL.createObjectURL(file));
+                }
+            };
+            video.src = URL.createObjectURL(file);
+        }
+
+        /* ================= WEBCAM RECORDING LOGIC ================= */
+        async function openWebcam() {
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+                liveCam.srcObject = cameraStream;
+                uploadArea.classList.add('hidden');
+                cameraArea.classList.remove('hidden');
+            } catch (err) {
+                alert("Camera access denied or device not found.");
+            }
+        }
+
+        function closeWebcam() {
+            if (cameraStream) cameraStream.getTracks().forEach(track => track.stop());
+            if (mediaRecorder && mediaRecorder.state === "recording") stopRecording();
+            cameraArea.classList.add('hidden');
+            uploadArea.classList.remove('hidden');
+        }
+
+        function toggleRecording() {
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+
+        function startRecording() {
+            recordedChunks = [];
+            mediaRecorder = new MediaRecorder(cameraStream, { mimeType: 'video/webm' });
+            
+            mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
+            
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                videoFileToSend = blob;
+                closeWebcam(); 
+                loadPreview(URL.createObjectURL(blob)); 
+            };
+
+            mediaRecorder.start();
+            
+            recordBtn.innerHTML = '<i data-feather="square" class="fill-current w-4 h-4"></i> Stop Recording';
+            recordBtn.classList.add('btn-recording');
+            recordBtn.classList.remove('btn-record');
+            recordingBadge.classList.remove('hidden');
+            feather.replace();
+
+            secondsRecorded = 0;
+            recordTimer.innerText = "0:00";
+            timerInterval = setInterval(() => {
+                secondsRecorded++;
+                let mins = Math.floor(secondsRecorded / 60);
+                let secs = secondsRecorded % 60;
+                recordTimer.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                
+                if (secondsRecorded >= MAX_TIME) stopRecording();
+            }, 1000);
+        }
+
+        function stopRecording() {
+            mediaRecorder.stop();
+            clearInterval(timerInterval);
+            
+            recordBtn.innerHTML = '<i data-feather="circle" class="fill-current w-4 h-4"></i> Start Recording';
+            recordBtn.classList.remove('btn-recording');
+            recordBtn.classList.add('btn-record');
+            recordingBadge.classList.add('hidden');
+            feather.replace();
+        }
+
+        /* ================= COMMON UI LOGIC ================= */
+        function showError(msg) {
+            dropZone.classList.add('error-shake');
+            
+            statusBox.classList.remove('hidden');
+            statusBox.className = "mt-6 p-4 rounded-xl flex items-center justify-center gap-3 text-sm font-semibold bg-red-50 text-red-600 border border-red-200";
+            statusBox.innerHTML = `<i data-feather="alert-circle" class="w-4 h-4"></i> ${msg}`;
+            feather.replace();
+
+            setTimeout(() => { 
+                dropZone.classList.remove('error-shake'); 
+                setTimeout(() => statusBox.classList.add('hidden'), 3000);
+            }, 500);
+        }
+
+        function loadPreview(url) {
+            videoPreview.src = url;
+            uploadArea.classList.add('hidden');
+            cameraArea.classList.add('hidden');
+            playerArea.classList.remove('hidden');
+            statusBox.classList.add('hidden');
+        }
+
+        function resetUI() {
+            videoPreview.pause();
+            videoPreview.src = "";
+            videoFileToSend = null; 
+            playerArea.classList.add('hidden');
+            uploadArea.classList.remove('hidden');
+            videoInput.value = "";
+            const btn = document.getElementById('processBtn');
+            btn.disabled = false;
+        }
+
+        // ================= API INTEGRATION =================
+        async function startVideoAI() {
+            const btn = document.getElementById('processBtn');
+            const btnText = document.getElementById('btnText');
+
+            if(!videoFileToSend) {
+                showError("Please select a video first.");
+                return;
+            }
+
+            btn.disabled = true;
+            btnText.innerText = "Uploading securely...";
+            
+            statusBox.classList.remove('hidden');
+            statusBox.className = "mt-6 p-4 rounded-xl flex items-center justify-center gap-3 text-sm font-semibold bg-blue-50 text-blue-600 border border-blue-200";
+            statusBox.innerHTML = '<i data-feather="loader" class="animate-spin w-4 h-4"></i> Processing video...';
+            feather.replace();
+
+            const formData = new FormData();
+            let fileName = videoFileToSend.name || 'user_video.webm';
+            formData.append('video', videoFileToSend, fileName);
+
+            try {
+                const response = await fetch('/api/upload_video', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error("Upload failed.");
+
+                const data = await response.json();
+
+                if (data.filename) {
+                    btnText.innerText = "Processing...";
+                    statusBox.className = "mt-6 p-4 rounded-xl flex items-center justify-center gap-3 text-sm font-semibold bg-green-50 text-green-700 border border-green-200";
+                    statusBox.innerHTML = '<i data-feather="check-circle" class="w-4 h-4"></i> Upload complete. Redirecting...';
+                    feather.replace();
+                    
+                    setTimeout(() => {
+                        window.location.href = `/video-result?file=${data.filename}`;
+                    }, 1000);
+                }
+
+            } catch (error) {
+                console.error("API Error:", error);
+                statusBox.className = "mt-6 p-4 rounded-xl flex items-center justify-center gap-3 text-sm font-semibold bg-red-50 text-red-600 border border-red-200";
+                statusBox.innerHTML = '<i data-feather="wifi-off" class="w-4 h-4"></i> Connection failed. Please try again.';
+                feather.replace();
+                
+                btn.disabled = false;
+                btnText.innerText = "Analyze Video";
+            }
+        }
+    </script>
+</body>
+</html>

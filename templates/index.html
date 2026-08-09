@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSort Solutions | Smart Waste Management</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♻️</text></svg>">
+    <meta name="description" content="Intelligent waste classification system for sustainable waste management.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f3f4f6; /* Light gray background */
+            color: #111827; /* Dark gray/Black text */
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Applying the stylish font to all headings */
+        h1, h2, h3, h4, h5, .brand-text {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Abstract Background Elements for Glass effect */
+        .bg-shape-1 {
+            position: absolute; top: -10%; left: -5%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(200,200,200,0.4) 0%, transparent 70%);
+            filter: blur(60px); pointer-events: none; z-index: -1;
+        }
+        .bg-shape-2 {
+            position: absolute; bottom: 10%; right: -5%; width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%);
+            filter: blur(80px); pointer-events: none; z-index: -1;
+        }
+
+        /* Standard Glassmorphism (Glass Mirror) CSS */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+        }
+
+        /* --- Restored AI Theme Scanning Animation --- */
+        .scanner-line {
+            position: absolute; width: 100%; height: 2px;
+            /* Using a clean emerald glow to stand out against the B&W theme */
+            background: linear-gradient(to right, transparent, rgba(52, 211, 153, 0.9), transparent);
+            box-shadow: 0 0 15px rgba(52, 211, 153, 0.6), 0 0 30px rgba(52, 211, 153, 0.3);
+            animation: scanLogo 3s linear infinite;
+            z-index: 20; pointer-events: none;
+            left: 0;
+        }
+        @keyframes scanLogo {
+            0% { top: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+    </style>
+</head>
+
+<body class="flex flex-col min-h-screen">
+
+    <div class="bg-shape-1"></div>
+    <div class="bg-shape-2"></div>
+
+    <nav class="glass-nav sticky top-0 z-50 transition-all">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="brand-text text-xl font-bold text-black flex items-center gap-2 tracking-tight">
+                <i data-feather="box" class="text-black"></i> EcoSort Solutions
+            </h1>
+            <div class="hidden md:flex space-x-8 items-center font-medium text-sm text-gray-600">
+                <a href="/geo-analytics" class="hover:text-black transition-colors">Locations</a>
+                <a href="/detect" class="hover:text-black transition-colors">Detection</a>
+                <a href="/dashboard" class="hover:text-black transition-colors">Dashboard</a>
+                <a href="/how-it-works" class="hover:text-black transition-colors">How it works</a>
+                <a href="/login" class="bg-black text-white hover:bg-gray-800 px-5 py-2 rounded-lg transition-all duration-300 flex items-center gap-2">
+                    <i data-feather="user" class="w-4 h-4"></i> Sign In
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow relative z-10 flex items-center">
+        <section class="py-20 w-full">
+            <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+                
+                <div>
+                    <span class="bg-white border border-gray-200 text-gray-600 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase mb-6 inline-block shadow-sm">
+                        Sustainable Initiatives
+                    </span>
+                    <h1 class="text-4xl md:text-5xl font-bold text-black leading-tight tracking-tight">
+                        Smart Waste <br>
+                        classification system
+                    </h1>
+                    <p class="mt-6 text-gray-600 text-lg leading-relaxed max-w-lg">
+                        Our intelligent platform simplifies waste sorting. By automatically categorizing materials, we provide instant recycling instructions and estimated degradation timelines to help communities achieve their sustainability goals efficiently.
+                    </p>
+                    <div class="mt-10 flex flex-wrap gap-4">
+                        <a href="/image-detection" class="bg-black text-white font-medium px-8 py-3.5 rounded-lg hover:bg-gray-800 transition-all shadow-md flex items-center gap-2">
+                            Get Started <i data-feather="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                        <a href="/how-it-works" class="glass-panel text-black font-medium px-8 py-3.5 rounded-lg hover:bg-white transition-all flex items-center gap-2">
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="relative w-full h-[400px] md:h-[500px] mt-10 md:mt-0">
+                    <div class="glass-panel w-full h-full rounded-2xl overflow-hidden p-2 relative flex items-center justify-center">
+                        
+                        <div class="scanner-line"></div>
+                        <div class="absolute top-6 left-6 border-t-2 border-l-2 border-emerald-500 w-8 h-8 opacity-80 z-10"></div>
+                        <div class="absolute bottom-6 right-6 border-b-2 border-r-2 border-emerald-500 w-8 h-8 opacity-80 z-10"></div>
+
+                        <img 
+                            src="/static/index.png" 
+                            alt="Automated Material Scanning" 
+                            class="rounded-xl object-cover w-full h-full grayscale-[30%] opacity-90 relative z-0"
+                        />
+                        
+                        <div class="absolute bottom-6 left-6 glass-panel px-4 py-2 rounded-lg flex items-center gap-3 shadow-lg z-10">
+                            <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                            <span class="brand-text text-sm font-semibold text-black">Scanner Active</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact" class="bg-black text-white py-16 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12">
+            <div>
+                <h3 class="brand-text text-xl font-bold tracking-tight flex items-center gap-2 mb-6">
+                    <i data-feather="box" class="text-white"></i> EcoSort Solutions
+                </h3>
+                <p class="text-gray-400 leading-relaxed text-sm max-w-sm">
+                    Providing automated waste sorting software for modern facilities. We are committed to fostering a cleaner, more sustainable planet through innovation.
+                </p>
+            </div>
+            <div>
+                <h3 class="brand-text font-semibold text-sm mb-6 uppercase tracking-wider text-gray-300">Quick Links</h3>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="/" class="text-gray-400 hover:text-white transition">Home</a></li>
+                    <li><a href="/services" class="text-gray-400 hover:text-white transition">Our Services</a></li>
+                    <li><a href="/about" class="text-gray-400 hover:text-white transition">About the Company</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="brand-text font-semibold text-sm mb-6 uppercase tracking-wider text-gray-300">Contact Us</h3>
+                <p class="flex items-center gap-3 mb-3 text-gray-400 text-sm">
+                    <i data-feather="mail" class="w-4 h-4"></i> contact@ecosort.com
+                </p>
+                <p class="flex items-center gap-3 text-gray-400 text-sm">
+                    <i data-feather="map-pin" class="w-4 h-4"></i> Global Headquarters, Corporate Park
+                </p>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 border-t border-gray-800 mt-12 pt-8 text-center text-xs text-gray-500">
+            &copy; 2026 EcoSort Solutions. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Initialize icons
+        feather.replace();
+    </script>
+</body>
+</html>
