@@ -1,34 +1,34 @@
-# EcoSort: AI-Powered Multi-Waste Classification System
+# ♻️ EcoSort: AI-Powered Multi-Waste Classification System
 
 **EcoSort** is a real-time computer vision and IoT platform built on **YOLOv8** that detects and classifies multi-waste using images, videos, and live webcam feeds.
 
 ---
 
-## 馃専 Key Features
+## Key Features
 
-* 鈿� **Real-Time Detection:** Identifies waste types instantly via images or live webcams using YOLOv8.
-* 鈴� **Decomposition Insights:** Provides degradation timelines for detected items.
-* 鈾伙笍 **Recycling Guidance:** Offers smart recycling and disposal suggestions.
-* 馃搳 **Smart Bin Dashboard:** Monitors live waste accumulation and bin capacity.
+* **Real-Time Detection:** Identifies waste types instantly via images or live webcams using YOLOv8.
+* **Decomposition Insights:** Provides degradation timelines for detected items.
+* **Recycling Guidance:** Offers smart recycling and disposal suggestions.
+* **Smart Bin Dashboard:** Monitors live waste accumulation and bin capacity.
 
 ---
 
-## 鈿欙笍 Requirements
+##⚙️ Requirements
 
 This project was developed using **Python 3.8+**, and the backend is powered by **Flask** along with **YOLOv8** for computer vision.
 
-### 馃摝 Required Libraries
+### 📦 Required Libraries
 Make sure to install the following dependencies before running the project:
-* `flask` 鈥� powers the web framework and server routing.
-* `flask-cors` 鈥� handles Cross-Origin Resource Sharing for API requests.
-* `ultralytics` 鈥� provides the YOLOv8 framework for waste detection, classification, and tracking.
-* `opencv-python` 鈥� handles real-time video streaming, image reading, and bounding box processing.
-* `numpy` 鈥� used for numerical computations and array handling.
-* `base64` / `uuid` / `datetime` 鈥� built-in modules for image encoding, unique file naming, and event timestamps.
+* `flask :`  powers the web framework and server routing.
+* `flask-cors :` handles Cross-Origin Resource Sharing for API requests.
+* `ultralytics :` provides the YOLOv8 framework for waste detection, classification, and tracking.
+* `opencv-python :` handles real-time video streaming, image reading, and bounding box processing.
+* `numpy :` used for numerical computations and array handling.
+* `base64` / `uuid` / `datetime :` built-in modules for image encoding, unique file naming, and event timestamps.
 
 ---
 
-## 馃摜 Installation
+## 📥 Installation
 
 Install all required dependencies using `pip`:
 
@@ -38,7 +38,7 @@ pip install -r requirements.txt
 
 ---
 
-## 馃摜 Download / Clone the Repository
+## 📥 Download / Clone the Repository
 
 You can clone the project repository via Git:
 
@@ -49,62 +49,62 @@ cd Waste-Classification
 
 ---
 
-## 馃搨 Repository Structure
+## 📂 Repository Structure
 
 Once downloaded or cloned, your directory structure will look like this:
 
 ```text
 EcoSort-Solution/
-鈹�
-鈹溾攢鈹€ static/                    # Static assets
-鈹�   鈹溾攢鈹€ crops/                 # Detected waste object crops
-鈹�   鈹溾攢鈹€ uploads/               # Uploaded images and videos
-鈹�   鈹斺攢鈹€ *.png                  # UI assets (index, steps 1-5)
-鈹�
-鈹溾攢鈹€ templates/                 # Flask HTML templates
-鈹�   鈹溾攢鈹€ dashboard.html         # Smart bin & analytics dashboard
-鈹�   鈹溾攢鈹€ detect.html            # Main detection interface
-鈹�   鈹溾攢鈹€ geo_analytics.html     # Waste location analytics
-鈹�   鈹溾攢鈹€ how-it-works.html      # System workflow guide
-鈹�   鈹溾攢鈹€ image_detection.html   # Image processing
-鈹�   鈹溾攢鈹€ image_result.html      # Image detection results
-鈹�   鈹溾攢鈹€ index.html             # Landing page
-鈹�   鈹溾攢鈹€ live-detection.html    # Real-time webcam feed
-鈹�   鈹溾攢鈹€ login.html             # User login
-鈹�   鈹溾攢鈹€ video-detection.html   # Video processing
-鈹�   鈹斺攢鈹€ video-result.html      # Video detection results
-鈹�
-鈹溾攢鈹€ Testing images/            # Dataset for model validation
-鈹溾攢鈹€ app.py                     # Main Flask backend & YOLOv8 integration
-鈹溾攢鈹€ data.yaml                  # Dataset configuration
-鈹溾攢鈹€ requirements.txt           # Python dependencies
-鈹溾攢鈹€ test_model.py              # Model testing script
-鈹斺攢鈹€ yolov8x.pt                 # Pre-trained YOLOv8 weights
+│
+├── static/                   # Static assets
+│   ├── crops/                # Detected waste object crops
+│   ├── uploads/              # Uploaded images and videos
+│   └── *.png                 # UI assets (index, steps 1-5)
+│
+├── templates/                # Flask HTML templates
+│   ├── dashboard.html        # Smart bin & analytics dashboard
+│   ├── detect.html           # Main detection interface
+│   ├── geo_analytics.html    # Waste location analytics
+│   ├── how-it-works.html     # System workflow guide
+│   ├── image_detection.html  # Image processing
+│   ├── image_result.html     # Image detection results
+│   ├── index.html            # Landing page
+│   ├── live-detection.html   # Real-time webcam feed
+│   ├── login.html            # User login
+│   ├── video-detection.html  # Video processing
+│   └── video-result.html     # Video detection results
+│
+├── Testing images/           # Dataset for model validation
+├── app.py                    # Main Flask backend & YOLOv8 integration
+├── data.yaml                 # Dataset configuration
+├── requirements.txt          # Python dependencies
+├── test_model.py             # Model testing script
+└── yolov8x.pt                # Trained YOLOv8 weights
 ```
 
 ---
 
-## 鈿欙笍 How It Works
+## ⚙️ How It Works
 
 The system processes multi-waste through multiple input modes integrated into the Flask application (`app.py`):
 
-### 馃摜 Input Modes
+### Input Modes
 * **Image Detection:** Upload static images via `image_detection.html` to instantly classify and localize waste items.
 * **Video Detection:** Upload video files to track and process frames sequentially.
 * **Live Webcam Detection:** Real-time stream processing (`live-detection.html`) using OpenCV and YOLOv8.
 
-### 馃攳 Detection & Classification
+### Detection & Classification
 * The model identifies objects using `yolov8x.pt` and maps them to municipal categories (Wet Waste, Dry Waste, E-Waste, Hazardous Waste).
 * Generates bounding boxes with confidence scores and saves cropped item images into `static/crops/`.
 
-### 馃搳 Smart Insights & Dashboard
-* **Decomposition Timelines:** Displays degradation duration (e.g., 2鈥�4 weeks for organic, 400+ years for plastic).
+### Smart Insights & Dashboard
+* **Decomposition Timelines:** Displays degradation duration (e.g., 2-4 weeks for organic, 400+ years for plastic).
 * **Recycling Suggestions:** Provides actionable disposal or recycling steps.
 * **Smart Bin Dashboard:** Tracks live bin capacity, impact scores, and CO2 saved metrics.
 
 ---
 
-## 馃 Model Information
+## 🚀 Model Information
 
 This project utilizes the **YOLOv8x (Extra Large)** pre-trained model. It is a highly robust base model originally trained on the COCO dataset, capable of detecting 80 different general objects.
 
@@ -116,7 +116,7 @@ This project utilizes the **YOLOv8x (Extra Large)** pre-trained model. It is a h
 
 ---
 
-## 馃摜 Model Download & Setup
+## 📥 Model Download & Setup
 
 Due to GitHub's file size restrictions, the large model file (`yolov8x.pt`) is hosted externally. To run this project successfully on your local machine, follow these steps:
 
@@ -132,43 +132,42 @@ Due to GitHub's file size restrictions, the large model file (`yolov8x.pt`) is h
      python app.py
      ```
 ---
- ## 馃柤锔� Visual Examples
+ ## 📸 Visual Examples
 
   Sample detection outputs and analysis results from EcoSort:
 
 * **Analysis 1:** ![Analysis 1](static/Analysis1.jpeg)
 * **Analysis 2:** ![Analysis 2](static/Analysis2.jpeg)
 
-                  ---
 
-## 馃搳 Dataset & Class Mapping Configuration
+## 📊 Dataset & Class Mapping Configuration
 
  This project leverages the highly accurate YOLOv8x pre-trained model, which was trained on the COCO (Common Objects in Context) dataset. Instead of training a custom dataset from scratch, the system intelligently maps general COCO object classes to specific municipal waste categories in real-time.
 
-    馃敆 **Dataset Reference:** COCO Dataset (80 Classes) (Used via `yolov8x.pt` weights)
+    🔗 **Dataset Reference:** COCO Dataset (80 Classes) (Used via `yolov8x.pt` weights)
 
- ### 馃攧 Dynamic Waste Mapping Logic
+ ### 🔄 Dynamic Waste Mapping Logic
     The backend seamlessly intercepts the standard detected objects and categorizes them into appropriate waste management bins:
 
-      * 馃崗 **Wet Waste (Organic & Food)**  
+      * 🍏 **Wet Waste (Organic & Food)**  
          * **Mapped Items:** Bananas, apples, sandwiches, broccoli, potted plants, etc.  
          * **Disposal:** Biodegradable (Composting & Biogas).
 
-      * 馃搫 **Wet Waste (Paper & Wood)**  
+      * 📄 **Wet Waste (Paper & Wood)**  
          * **Mapped Items:** Books, wood/wood objects, etc.  
          * **Disposal:** Biodegradable / Recyclable (Composting & Paper Recycling).
 
-      * 馃イ **Dry Waste (Plastic, Bottles & Cans)**  
+      * 🥤 **Dry Waste (Plastic, Bottles & Cans)**  
          * **Mapped Items:** Bottles, umbrellas, backpacks, ties, sports balls, forks, spoons, etc.  
          * **Disposal:** Recyclable (Melted for furniture, new bottles, or road construction).
 
-      * 馃捇 **E-Waste**  
+      *  💻 **E-Waste**  
          * **Mapped Items:** Laptops, cell phones, TVs, microwaves, traffic lights, etc.  
          * **Disposal:** Hazardous but recyclable (Extraction of precious metals).
 
                      ---
 
- ## 馃弸锔忊€嶁檪锔� Train the Model with Your Dataset
+ ## 🏋️‍♂️ Train the Model with Your Dataset
 
     While this project uses a pre-trained YOLOv8x model by default, you can fine-tune it on your own custom waste classification dataset using a training script.
 
@@ -201,7 +200,7 @@ Due to GitHub's file size restrictions, the large model file (`yolov8x.pt`) is h
 
         3. Replace the model path in your `app.py` file with this new custom weight file to run predictions on your locally trained classes.
         ---
-## 馃殌 Future Enhancements
+## 🤖 Future Enhancements
 
     1. 馃摴 **Video Stream Analysis:** Continuous real-time video analytics and processing pipeline.
     2. 馃幆 **More Categories & Fine-tuning:** Add additional waste sub-categories and fine-tune model parameters for higher accuracy.
