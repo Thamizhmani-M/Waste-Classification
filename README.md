@@ -143,8 +143,8 @@ Due to GitHub's file size restrictions, the large model file (`yolov8x.pt`) is h
 
  This project leverages the highly accurate YOLOv8x pre-trained model, which was trained on the COCO (Common Objects in Context) dataset. Instead of training a custom dataset from scratch, the system intelligently maps general COCO object classes to specific municipal waste categories in real-time.
 
-    🔗 Dataset Reference: COCO Dataset (80 Classes) (Used via `yolov8x.pt` weights)
----
+  🔗 Dataset Reference: COCO Dataset (80 Classes) (Used via `yolov8x.pt` weights)
+
 
 ## 🔄 Dynamic Waste Mapping Logic
  The backend seamlessly intercepts the standard detected objects and categorizes them into appropriate waste management bins:
@@ -172,7 +172,7 @@ Due to GitHub's file size restrictions, the large model file (`yolov8x.pt`) is h
 
  Ensure your custom dataset is formatted correctly (YOLO format) and the paths are updated in the `data.yaml` configuration file.
 
-   ##Training Script (`train_script.py`)
+   ### 📝Training Script (`train_script.py`)
    ```bash        
    from ultralytics import YOLO
 
@@ -188,22 +188,22 @@ Due to GitHub's file size restrictions, the large model file (`yolov8x.pt`) is h
    ```
 
 
-   ##How to Run
+   ### 📜How to Run
    To initiate the training process, execute the following command in your terminal:
        ```bash
        python train_script.py
        ```
 
-   ##Post-Training Steps
+   ### 📌Post-Training Steps
    1.Once training is complete, fine-tuned weights will be saved in `runs/detect/ecosort_custom_model/weights/`.
 
    2.Locate the best weight file (e.g., `best.pt` or `yolov8x.pt`).
 
    3.Replace the model path in your `app.py` file with this new custom weight file to run predictions on your locally trained classes.
-       
+---
+
 ## 🤖 Future Enhancements
 
-**1.Video Stream Analysis:** Continuous real-time video analytics and processing pipeline.
-  **2.More Categories & Fine-tuning:** Add additional waste sub-categories and fine-tune model parameters for higher accuracy.
-  **3.Voice Feedback:** Integrated real-time voice feedback system to announce detected waste categories aloud.
----
+  **1.🎥 Video Stream Analysis:** Continuous real-time video analytics and processing pipeline.
+  **2.📈 More Categories & Fine-tuning:** Add additional waste sub-categories and fine-tune model parameters for higher accuracy.
+  **3.🔊 Voice Feedback:** Integrated real-time voice feedback system to announce detected waste categories aloud.
