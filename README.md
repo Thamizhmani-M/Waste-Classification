@@ -203,7 +203,7 @@ Due to GitHub's file size restrictions, the large model file (`yolov8x.pt`) is h
    
 ---
 
-## 🤖 Future Enhancements
+## 🤖Future Enhancements
 
 1. **🎥 Video Stream Analysis:** Continuous real-time video analytics and processing pipeline.
 2. **📈 More Categories & Fine-tuning:** Add additional waste sub-categories and fine-tune model parameters for higher accuracy.
