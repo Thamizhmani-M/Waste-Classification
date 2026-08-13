@@ -199,11 +199,12 @@ Due to GitHub's file size restrictions, the large model file (`yolov8x.pt`) is h
 
    2.Locate the best weight file (e.g., `best.pt` or `yolov8x.pt`).
 
-   3.Replace the model path in your `app.py` file with this new custom weight file to run predictions on your locally trained classes.
+   3.Replace the model path in your `app.py` file with this new custom  weight file to run predictions on your locally trained classes.
+   
 ---
 
 ## 🤖 Future Enhancements
 
-  **1.🎥 Video Stream Analysis:** Continuous real-time video analytics and processing pipeline.
-  **2.📈 More Categories & Fine-tuning:** Add additional waste sub-categories and fine-tune model parameters for higher accuracy.
-  **3.🔊 Voice Feedback:** Integrated real-time voice feedback system to announce detected waste categories aloud.
+1. **🎥 Video Stream Analysis:** Continuous real-time video analytics and processing pipeline.
+2. **📈 More Categories & Fine-tuning:** Add additional waste sub-categories and fine-tune model parameters for higher accuracy.
+3. **🔊 Voice Feedback:** Integrated real-time voice feedback system to announce detected waste categories aloud.
